@@ -55,6 +55,7 @@ import static com.ververica.cdc.connectors.mysql.source.utils.RecordUtils.isLowW
 import static com.ververica.cdc.connectors.mysql.source.utils.TableDiscoveryUtils.listTables;
 
 /** The {@link RecordEmitter} implementation for pipeline mysql connector. */
+//todo 真正读取数据的类
 public class MySqlPipelineRecordEmitter extends MySqlRecordEmitter<Event> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MySqlPipelineRecordEmitter.class);

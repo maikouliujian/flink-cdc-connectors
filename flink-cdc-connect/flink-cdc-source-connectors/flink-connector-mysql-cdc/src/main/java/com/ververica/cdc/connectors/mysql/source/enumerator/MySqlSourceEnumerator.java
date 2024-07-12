@@ -62,6 +62,9 @@ import static com.ververica.cdc.connectors.mysql.source.assigners.AssignerStatus
  * A MySQL CDC source enumerator that enumerates receive the split request and assign the split to
  * source readers.
  */
+//todo 这个组件主要用于 Chunk 的划分，划分好的 Chunk 会提供给下游的 SourceReader 去读取，
+// 通过把 chunk 分发给不同的 SourceReader 便实现了并发读取 Snapshot Chunk 的过程，
+// 同时基于 FLIP-27 能较为方便地做到 chunk 粒度的 checkpoint。
 @Internal
 public class MySqlSourceEnumerator implements SplitEnumerator<MySqlSplit, PendingSplitsState> {
     private static final Logger LOG = LoggerFactory.getLogger(MySqlSourceEnumerator.class);

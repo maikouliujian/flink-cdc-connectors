@@ -86,7 +86,7 @@ public class MySqlSourceOptions {
                                     + " joins the MySQL  cluster as another server (with this unique ID) "
                                     + "so it can read the binlog. By default, a random number is generated between"
                                     + " 5400 and 6400, though we recommend setting an explicit value.");
-
+    //todo
     public static final ConfigOption<Boolean> SCAN_INCREMENTAL_SNAPSHOT_ENABLED =
             ConfigOptions.key("scan.incremental.snapshot.enabled")
                     .booleanType()
@@ -235,7 +235,7 @@ public class MySqlSourceOptions {
                     .defaultValue(false)
                     .withDescription(
                             "Whether capture the scan the newly added tables or not, by default is false.");
-
+    //todo chunk column
     @Experimental
     public static final ConfigOption<String> SCAN_INCREMENTAL_SNAPSHOT_CHUNK_KEY_COLUMN =
             ConfigOptions.key("scan.incremental.snapshot.chunk.key-column")

@@ -79,11 +79,12 @@ public class MySqlSplitReader implements SplitReader<SourceRecords, MySqlSplit> 
         this.context = context;
         this.snapshotHooks = snapshotHooks;
     }
-
+    //todo 读取数据！！！！！！
     @Override
     public RecordsWithSplitIds<SourceRecords> fetch() throws IOException {
         try {
             suspendBinlogReaderIfNeed();
+            //todo
             return pollSplitRecords();
         } catch (InterruptedException e) {
             LOG.warn("fetch data failed.", e);
@@ -101,7 +102,7 @@ public class MySqlSplitReader implements SplitReader<SourceRecords, MySqlSplit> 
             LOG.info("Suspend binlog reader to wait the binlog split update.");
         }
     }
-
+    //todo 先用SnapshotSplitReader读取全量数据，再用BinlogSplitReader读取增量数据！！！！！！
     private MySqlRecords pollSplitRecords() throws InterruptedException {
         Iterator<SourceRecords> dataIt;
         if (currentReader == null) {
@@ -112,11 +113,13 @@ public class MySqlSplitReader implements SplitReader<SourceRecords, MySqlSplit> 
                 // (b) added back binlog-split in newly added table process
                 MySqlSplit nextSplit = binlogSplits.poll();
                 currentSplitId = nextSplit.splitId();
+                //todo
                 currentReader = getBinlogSplitReader();
                 currentReader.submitSplit(nextSplit);
             } else if (snapshotSplits.size() > 0) {
                 MySqlSplit nextSplit = snapshotSplits.poll();
                 currentSplitId = nextSplit.splitId();
+                //todo
                 currentReader = getSnapshotSplitReader();
                 currentReader.submitSplit(nextSplit);
             } else {

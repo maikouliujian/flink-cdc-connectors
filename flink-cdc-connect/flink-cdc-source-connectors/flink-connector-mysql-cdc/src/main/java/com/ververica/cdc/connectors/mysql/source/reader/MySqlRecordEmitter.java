@@ -72,7 +72,7 @@ public class MySqlRecordEmitter<T> implements RecordEmitter<SourceRecords, T, My
         this.includeSchemaChanges = includeSchemaChanges;
         this.outputCollector = new OutputCollector<>();
     }
-
+    //todo 发送数据
     @Override
     public void emitRecord(
             SourceRecords sourceRecords, SourceOutput<T> output, MySqlSplitState splitState)

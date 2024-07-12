@@ -117,6 +117,7 @@ public class MySqlTableSourceFactory implements DynamicTableSourceFactory {
         double distributionFactorLower = config.get(CHUNK_KEY_EVEN_DISTRIBUTION_FACTOR_LOWER_BOUND);
         boolean scanNewlyAddedTableEnabled = config.get(SCAN_NEWLY_ADDED_TABLE_ENABLED);
         Duration heartbeatInterval = config.get(HEARTBEAT_INTERVAL);
+        //todo chunkKeyColumn
         String chunkKeyColumn =
                 config.getOptional(SCAN_INCREMENTAL_SNAPSHOT_CHUNK_KEY_COLUMN).orElse(null);
 

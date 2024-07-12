@@ -55,6 +55,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * A {@link DynamicTableSource} that describes how to create a MySQL binlog source from a logical
  * description.
  */
+//todo mysql cdc source入口
 public class MySqlTableSource implements ScanTableSource, SupportsReadingMetadata {
 
     private final ResolvedSchema physicalSchema;
@@ -176,6 +177,7 @@ public class MySqlTableSource implements ScanTableSource, SupportsReadingMetadat
                         .build();
         if (enableParallelRead) {
             MySqlSource<RowData> parallelSource =
+                    //todo 数据源
                     MySqlSource.<RowData>builder()
                             .hostname(hostname)
                             .port(port)
@@ -203,6 +205,7 @@ public class MySqlTableSource implements ScanTableSource, SupportsReadingMetadat
                             .closeIdleReaders(closeIdleReaders)
                             .jdbcProperties(jdbcProperties)
                             .heartbeatInterval(heartbeatInterval)
+                            //todo chunkKeyColumn
                             .chunkKeyColumn(new ObjectPath(database, tableName), chunkKeyColumn)
                             .skipSnapshotBackfill(skipSnapshotBackFill)
                             .build();

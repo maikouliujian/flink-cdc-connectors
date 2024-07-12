@@ -105,6 +105,7 @@ public class MySqlSource<T>
 
     private final MySqlSourceConfigFactory configFactory;
     private final DebeziumDeserializationSchema<T> deserializationSchema;
+    //todo 真正读取发送数据的类
     private final RecordEmitterSupplier<T> recordEmitterSupplier;
 
     // Actions to perform during the snapshot phase.
@@ -154,12 +155,15 @@ public class MySqlSource<T>
         return Boundedness.CONTINUOUS_UNBOUNDED;
     }
 
+    //todo 构建reader
     @Override
     public SourceReader<T, MySqlSplit> createReader(SourceReaderContext readerContext)
             throws Exception {
         // create source config for the given subtask (e.g. unique server id)
+        //todo 构建配置
         MySqlSourceConfig sourceConfig =
                 configFactory.createConfig(readerContext.getIndexOfSubtask());
+        //todo 读取数据的队列！！！！！！
         FutureCompletingBlockingQueue<RecordsWithSplitIds<SourceRecords>> elementsQueue =
                 new FutureCompletingBlockingQueue<>();
 
@@ -179,6 +183,7 @@ public class MySqlSource<T>
                                 readerContext.getIndexOfSubtask(),
                                 mySqlSourceReaderContext,
                                 snapshotHooks);
+        //todo MySqlSourceReader
         return new MySqlSourceReader<>(
                 elementsQueue,
                 splitReaderSupplier,
