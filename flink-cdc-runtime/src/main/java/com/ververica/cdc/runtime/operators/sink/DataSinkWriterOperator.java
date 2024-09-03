@@ -126,9 +126,9 @@ public class DataSinkWriterOperator<CommT> extends AbstractStreamOperator<Commit
     @Override
     public void processElement(StreamRecord<Event> element) throws Exception {
         Event event = element.getValue();
-
         // FlushEvent triggers flush
         if (event instanceof FlushEvent) {
+            //todo 刷写数据！！！！！！
             handleFlushEvent(((FlushEvent) event));
             return;
         }
@@ -174,7 +174,9 @@ public class DataSinkWriterOperator<CommT> extends AbstractStreamOperator<Commit
     // ----------------------------- Helper functions -------------------------------
 
     private void handleFlushEvent(FlushEvent event) throws Exception {
+        //todo 将内存中的数据刷写到磁盘
         copySinkWriter.flush(false);
+        //todo 通知刷写完成
         schemaEvolutionClient.notifyFlushSuccess(
                 getRuntimeContext().getIndexOfThisSubtask(), event.getTableId());
     }

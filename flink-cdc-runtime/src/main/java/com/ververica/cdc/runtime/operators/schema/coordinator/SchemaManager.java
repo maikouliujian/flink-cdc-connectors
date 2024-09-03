@@ -110,6 +110,7 @@ public class SchemaManager {
             LOG.info("Handling schema change event: {}", schemaChangeEvent);
             registerNewSchema(
                     schemaChangeEvent.tableId(),
+                    //todo 返回新的schema
                     SchemaUtils.applySchemaChangeEvent(optionalSchema.get(), schemaChangeEvent));
         }
     }

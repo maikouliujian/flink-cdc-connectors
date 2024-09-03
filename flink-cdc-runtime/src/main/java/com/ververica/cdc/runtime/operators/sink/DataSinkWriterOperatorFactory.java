@@ -47,6 +47,7 @@ public class DataSinkWriterOperatorFactory<CommT>
     @Override
     public <T extends StreamOperator<CommittableMessage<CommT>>> T createStreamOperator(
             StreamOperatorParameters<CommittableMessage<CommT>> parameters) {
+        //todo data sink 算子
         DataSinkWriterOperator<CommT> writerOperator =
                 new DataSinkWriterOperator<>(
                         sink, processingTimeService, getMailboxExecutor(), schemaOperatorID);

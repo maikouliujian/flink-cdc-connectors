@@ -115,6 +115,7 @@ public class SchemaRegistry implements OperatorCoordinator, CoordinationRequestH
     public void handleEventFromOperator(int subtask, int attemptNumber, OperatorEvent event)
             throws Exception {
         if (event instanceof FlushSuccessEvent) {
+            //todo sink算子刷写数据成功
             FlushSuccessEvent flushSuccessEvent = (FlushSuccessEvent) event;
             LOG.info(
                     "Sink subtask {} succeed flushing for table {}.",
@@ -153,6 +154,7 @@ public class SchemaRegistry implements OperatorCoordinator, CoordinationRequestH
     public CompletableFuture<CoordinationResponse> handleCoordinationRequest(
             CoordinationRequest request) {
         if (request instanceof SchemaChangeRequest) {
+            //todo 接收到SchemaChange Request
             SchemaChangeRequest schemaChangeRequest = (SchemaChangeRequest) request;
             return requestHandler.handleSchemaChangeRequest(schemaChangeRequest);
         } else if (request instanceof ReleaseUpstreamRequest) {

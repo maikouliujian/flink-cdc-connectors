@@ -48,6 +48,7 @@ import java.util.concurrent.CompletableFuture;
  * The operator will evolve schemas in {@link SchemaRegistry} for incoming {@link
  * SchemaChangeEvent}s and block the stream for tables before their schema changes finish.
  */
+//todo 管理schema的算子
 @Internal
 public class SchemaOperator extends AbstractStreamOperator<Event>
         implements OneInputStreamOperator<Event, Event> {
@@ -68,6 +69,7 @@ public class SchemaOperator extends AbstractStreamOperator<Event>
             StreamConfig config,
             Output<StreamRecord<Event>> output) {
         super.setup(containingTask, config, output);
+        //todo OperatorCoordinatorEventGateway【调用它可以通过jobmanager的rpc找到对应OperatorID的Coordinator】
         this.toCoordinator = containingTask.getEnvironment().getOperatorCoordinatorEventGateway();
     }
 
@@ -77,11 +79,13 @@ public class SchemaOperator extends AbstractStreamOperator<Event>
     @Override
     public void processElement(StreamRecord<Event> streamRecord) {
         Event event = streamRecord.getValue();
+        //todo 如果是schema change事件
         if (event instanceof SchemaChangeEvent) {
             TableId tableId = ((SchemaChangeEvent) event).tableId();
             LOG.info(
                     "Table {} received SchemaChangeEvent and start to be blocked.",
                     tableId.toString());
+            //todo 处理schema change事件，阻塞
             handleSchemaChangeEvent(tableId, (SchemaChangeEvent) event);
             return;
         }
@@ -92,6 +96,7 @@ public class SchemaOperator extends AbstractStreamOperator<Event>
 
     private void handleSchemaChangeEvent(TableId tableId, SchemaChangeEvent schemaChangeEvent) {
         // The request will need to send a FlushEvent or block until flushing finished
+        //todo
         SchemaChangeResponse response = requestSchemaChange(tableId, schemaChangeEvent);
         if (response.isShouldSendFlushEvent()) {
             LOG.info(
@@ -100,6 +105,7 @@ public class SchemaOperator extends AbstractStreamOperator<Event>
                     getRuntimeContext().getIndexOfThisSubtask());
             output.collect(new StreamRecord<>(new FlushEvent(tableId)));
             output.collect(new StreamRecord<>(schemaChangeEvent));
+            //todo 阻塞直到old schema的数据刷写成功
             // The request will block until flushing finished in each sink writer
             requestReleaseUpstream();
         }
@@ -107,6 +113,7 @@ public class SchemaOperator extends AbstractStreamOperator<Event>
 
     private SchemaChangeResponse requestSchemaChange(
             TableId tableId, SchemaChangeEvent schemaChangeEvent) {
+        //todo
         return sendRequestToCoordinator(new SchemaChangeRequest(tableId, schemaChangeEvent));
     }
 
@@ -118,8 +125,10 @@ public class SchemaOperator extends AbstractStreamOperator<Event>
             RESPONSE sendRequestToCoordinator(REQUEST request) {
         try {
             CompletableFuture<CoordinationResponse> responseFuture =
+                    //todo 发送schema change 到 schemaRegistry
                     toCoordinator.sendRequestToCoordinator(
                             getOperatorID(), new SerializedValue<>(request));
+            //todo 在这阻塞！！！！！！！！！！
             return CoordinationResponseUtils.unwrap(responseFuture.get());
         } catch (Exception e) {
             throw new IllegalStateException(

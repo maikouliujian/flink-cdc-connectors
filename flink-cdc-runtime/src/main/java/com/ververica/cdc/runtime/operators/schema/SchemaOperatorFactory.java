@@ -37,6 +37,7 @@ public class SchemaOperatorFactory extends SimpleOperatorFactory<Event>
     private final MetadataApplier metadataApplier;
 
     public SchemaOperatorFactory(MetadataApplier metadataApplier) {
+        //todo 算子
         super(new SchemaOperator());
         this.metadataApplier = metadataApplier;
     }
@@ -44,6 +45,7 @@ public class SchemaOperatorFactory extends SimpleOperatorFactory<Event>
     @Override
     public OperatorCoordinator.Provider getCoordinatorProvider(
             String operatorName, OperatorID operatorID) {
+        //todo 算子对应的OperatorCoordinator.Provider
         return new SchemaRegistryProvider(operatorID, operatorName, metadataApplier);
     }
 }

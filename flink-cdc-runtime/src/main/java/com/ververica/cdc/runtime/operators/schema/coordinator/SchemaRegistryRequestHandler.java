@@ -99,8 +99,10 @@ public class SchemaRegistryRequestHandler {
             }
             CompletableFuture<CoordinationResponse> response =
                     CompletableFuture.completedFuture(wrap(new SchemaChangeResponse(true)));
+            //todo 修改schema
             schemaManager.applySchemaChange(request.getSchemaChangeEvent());
             pendingSchemaChanges.add(new PendingSchemaChange(request, response));
+            //todo 等待ReleaseRequest
             pendingSchemaChanges.get(0).startToWaitForReleaseRequest();
             return response;
         } else {
@@ -113,8 +115,10 @@ public class SchemaRegistryRequestHandler {
 
     /** Handle the {@link ReleaseUpstreamRequest} and wait for all sink subtasks flushing. */
     public CompletableFuture<CoordinationResponse> handleReleaseUpstreamRequest() {
+        //todo ReleaseRequest来了
         CompletableFuture<CoordinationResponse> response =
                 pendingSchemaChanges.get(0).getResponseFuture();
+        //todo 是否完成
         if (response.isDone()) {
             startNextSchemaChangeRequest();
         } else {
@@ -141,12 +145,15 @@ public class SchemaRegistryRequestHandler {
      */
     public void flushSuccess(TableId tableId, int sinkSubtask) {
         flushedSinkWriters.add(sinkSubtask);
+        //todo 判断是否所有的sink subtask都刷写成功
         if (flushedSinkWriters.equals(activeSinkWriters)) {
             LOG.info(
                     "All sink subtask have flushed for table {}. Start to apply schema change.",
                     tableId.toString());
             PendingSchemaChange waitFlushSuccess = pendingSchemaChanges.get(0);
+            //todo 让下游db进行 schema change
             applySchemaChange(tableId, waitFlushSuccess.getChangeRequest().getSchemaChangeEvent());
+            //todo 下游db修改完schema后，通知ReleaseUpstream，ReleaseRequest完成
             waitFlushSuccess.getResponseFuture().complete(wrap(new ReleaseUpstreamResponse()));
 
             if (RECEIVED_RELEASE_REQUEST.equals(waitFlushSuccess.getStatus())) {

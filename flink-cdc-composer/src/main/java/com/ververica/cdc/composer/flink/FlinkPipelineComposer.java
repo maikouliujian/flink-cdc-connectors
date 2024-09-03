@@ -116,6 +116,7 @@ public class FlinkPipelineComposer implements PipelineComposer {
                         pipelineDef.getConfig().get(PipelineOptions.PIPELINE_SCHEMA_OPERATOR_UID));
         stream =
                 schemaOperatorTranslator.translate(
+                        //todo 添加sink算子的MetadataApplier
                         stream, parallelism, dataSink.getMetadataApplier());
         OperatorIDGenerator schemaOperatorIDGenerator =
                 new OperatorIDGenerator(schemaOperatorTranslator.getSchemaOperatorUid());
