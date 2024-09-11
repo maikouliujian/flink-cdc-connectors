@@ -48,6 +48,7 @@ import java.util.Queue;
  *
  * @param <T> The type of elements produced by the handler.
  */
+//todo 拉取数据的类
 @Internal
 public class DebeziumChangeFetcher<T> {
 

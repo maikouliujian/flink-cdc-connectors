@@ -364,7 +364,9 @@ public class DebeziumSourceFunction<T> extends RichSourceFunction<T>
 
     @Override
     public void run(SourceContext<T> sourceContext) throws Exception {
+
         properties.setProperty("name", "engine");
+        //todo 设置offset存储引擎
         properties.setProperty("offset.storage", FlinkOffsetBackingStore.class.getCanonicalName());
         if (restoredOffsetState != null) {
             // restored from state

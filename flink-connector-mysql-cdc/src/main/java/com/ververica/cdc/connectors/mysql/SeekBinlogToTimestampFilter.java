@@ -62,6 +62,7 @@ public class SeekBinlogToTimestampFilter<T> implements DebeziumDeserializationSc
         Struct value = (Struct) record.value();
         Struct source = value.getStruct(Envelope.FieldName.SOURCE);
         Long ts = source.getInt64(Envelope.FieldName.TIMESTAMP);
+        //todo 对数据按照时间戳过滤！！！！！！
         if (ts != null && ts >= startupTimestampMillis) {
             serializer.deserialize(record, out);
             find = true;

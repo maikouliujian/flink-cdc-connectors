@@ -34,6 +34,7 @@ import static com.ververica.cdc.debezium.DebeziumSourceFunction.LEGACY_IMPLEMENT
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /** A builder to build a SourceFunction which can read snapshot and continue to consume binlog. */
+//todo source类
 public class MySqlSource {
 
     public static <T> Builder<T> builder() {
@@ -203,11 +204,13 @@ public class MySqlSource {
                     break;
 
                 case TIMESTAMP:
+                    //todo 不建议使用debezium.snapshot.mode=never，因为never会从binlog开头读取数据
                     checkNotNull(deserializer);
                     props.setProperty("snapshot.mode", "never");
                     deserializer =
                             new SeekBinlogToTimestampFilter<>(
-                                    startupOptions.startupTimestampMillis, deserializer);
+                                    startupOptions.
+                                            startupTimestampMillis, deserializer);
                     break;
 
                 default:
